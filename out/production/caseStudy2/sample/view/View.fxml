@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="476.0" prefWidth="722.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.AdminController">
+   <children>
+      <TableView fx:id="tableView" layoutX="373.0" prefHeight="478.0" prefWidth="349.0">
+        <columns>
+          <TableColumn fx:id="idColumn" prefWidth="59.0" text="ID" />
+          <TableColumn fx:id="nameColumn" prefWidth="92.0" text="Name" />
+            <TableColumn fx:id="priceColumn" prefWidth="83.0" text="Price" />
+            <TableColumn fx:id="typeColumn" prefWidth="102.0" text="TypeDrink" />
+        </columns>
+      </TableView>
+      <Label layoutX="27.0" layoutY="151.0" text="ID" />
+      <Label layoutX="23.0" layoutY="199.0" text="Name" />
+      <Label layoutX="26.0" layoutY="238.0" text="Price" />
+      <TextField fx:id="idText" layoutX="62.0" layoutY="147.0" promptText="enter ID product" />
+      <TextField fx:id="nameText" layoutX="62.0" layoutY="195.0" promptText="enter name product" />
+      <TextField fx:id="priceText" layoutX="62.0" layoutY="234.0" promptText="enter  price product" />
+      <Button fx:id="addButton" layoutX="225.0" layoutY="147.0" mnemonicParsing="false" onAction="#add" prefHeight="25.0" prefWidth="51.0" text="Add" />
+      <Button fx:id="deleteButton" layoutX="310.0" layoutY="147.0" mnemonicParsing="false" onAction="#delete" text="Delete" />
+      <Button fx:id="editButton" layoutX="310.0" layoutY="195.0" mnemonicParsing="false" onAction="#edit" prefHeight="25.0" prefWidth="51.0" text="edit" />
+      <Label layoutX="25.0" layoutY="278.0" text="Type" />
+      <Button layoutX="293.0" layoutY="11.0" mnemonicParsing="false" onAction="#logOut" text="log out" />
+      <Text fx:id="userText" layoutX="23.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Admin" />
+      <Button fx:id="updateButton" layoutX="224.0" layoutY="195.0" mnemonicParsing="false" onAction="#update" text="update" />
+      <Label layoutX="25.0" layoutY="87.0" text="Search" />
+      <TextField fx:id="searchText" layoutX="62.0" layoutY="83.0" promptText="search everything" />
+      <ChoiceBox fx:id="typeText" layoutX="62.0" layoutY="283.0" prefWidth="150.0" />
+   </children>
+</AnchorPane>
