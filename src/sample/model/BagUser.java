@@ -2,7 +2,7 @@ package sample.model;
 
 public class BagUser {
     private String name;
-    private int price;
+    private String price;
     private int quantity;
 
     public BagUser() {
@@ -16,11 +16,11 @@ public class BagUser {
         this.name = name;
     }
 
-    public int getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
@@ -32,7 +32,7 @@ public class BagUser {
         this.quantity = quantity;
     }
 
-    public BagUser(String name, int price, int quantity) {
+    public BagUser(String name, String price, int quantity) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;

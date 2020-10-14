@@ -24,6 +24,7 @@ import java.io.*;
 import java.net.URL;
 //import java.sql.Struct;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.*;
 
 public class AdminController implements Initializable, MyAdminControl {
@@ -37,7 +38,7 @@ public class AdminController implements Initializable, MyAdminControl {
     private TableColumn<Product, String> nameColumn;
 
     @FXML
-    private TableColumn<Product, Integer> priceColumn;
+    private TableColumn<Product, String> priceColumn;
 
     @FXML
     private TableColumn<Product, String> typeColumn;
@@ -61,6 +62,14 @@ public class AdminController implements Initializable, MyAdminControl {
     private Button deleteButton;
     @FXML
     private Button updateButton;
+    @FXML
+    private Label idLabel;
+
+    @FXML
+    private Label nameLabel;
+
+    @FXML
+    private Label priceLabel;
 
     @FXML
     private TextField searchText;
@@ -81,9 +90,11 @@ public class AdminController implements Initializable, MyAdminControl {
 
         idColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("price"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("price"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("typeDrink"));
+        priceColumn.setStyle( "-fx-alignment: CENTER-RIGHT;");
         tableView.setItems(productList);
+        validate();
         this.search();
     }
 
@@ -96,11 +107,11 @@ public class AdminController implements Initializable, MyAdminControl {
         try {
             int id = Integer.parseInt(idText.getText());
             String name = nameText.getText();
-//            NumberFormat nf = NumberFormat.getInstance(new Locale("en", "US"));
-//            NumberFormat numberFormat= NumberFormat.getNumberInstance(new Locale("Us", "en"));
+            NumberFormat nf = NumberFormat.getInstance(new Locale("en", "US"));
+            String price = nf.format(Integer.parseInt(priceText.getText()));
             newPro.setId(id);
             newPro.setName(name);
-            newPro.setPrice(Integer.parseInt(priceText.getText()));
+            newPro.setPrice(price);
             newPro.setTypeDrink((String) typeText.getValue());
             if (!checkId(id) && !checkName(name)) {
                 productList.add(newPro);
@@ -124,14 +135,60 @@ public class AdminController implements Initializable, MyAdminControl {
         nameText.clear();
         priceText.clear();
     }
+
+    public void validate(){
+        idText.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d$") && !newValue.isEmpty()) {
+                idLabel.setText("Invalid ID!");
+                addButton.setDisable(true);
+            } else {
+                idLabel.setText("");
+                addButton.setDisable(false);
+            }
+        });
+        nameText.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\w+$") && !newValue.isEmpty()) {
+                nameLabel.setText("Invalid name!");
+                addButton.setDisable(true);
+            } else {
+                nameLabel.setText("");
+                addButton.setDisable(false);
+            }
+        });
+        priceText.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d+$") && !newValue.isEmpty()) {
+                priceLabel.setText("Invalid Price!");
+                addButton.setDisable(true);
+            } else {
+                priceLabel.setText("");
+                addButton.setDisable(false);
+            }
+//            NumberFormat formatter = NumberFormat.getInstance(new Locale("en", "US"));
+//            NumberFormat number = NumberFormat.getInstance(Locale.getDefault());
+//            String newValueStr = formatter.format(Long.parseLong(newValue));
+//
+////                Number price = number.parse(newValueStr);
+//                priceText.setText(String.valueOf(newValueStr));
+
+
+
+        });
+    }
     @Override
     public void edit() {
         Product selected = tableView.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            idText.setText(String.valueOf(selected.getId()));
-            nameText.setText(selected.getName());
-            typeText.setValue(selected.getTypeDrink());
-            priceText.setText(String.valueOf(selected.getPrice()));
+            NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+            try {
+                Number price = nf.parse(selected.getPrice());
+                idText.setText(String.valueOf(selected.getId()));
+                nameText.setText(selected.getName());
+                typeText.setValue(selected.getTypeDrink());
+                priceText.setText(String.valueOf(price));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
         } else {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setContentText("plz choose a product");
@@ -145,11 +202,13 @@ public class AdminController implements Initializable, MyAdminControl {
     @Override
     public void update() {
         try {
+            NumberFormat nf = NumberFormat.getInstance(new Locale("en", "US"));
+            String price = nf.format(Integer.parseInt(priceText.getText()));
             for (int i = 0; i < productList.size(); i++) {
                 if (productList.get(i).getId()==Integer.parseInt(idText.getText())) {
                     productList.get(i).setId(Integer.parseInt(idText.getText()));
                     productList.get(i).setName(nameText.getText());
-                    productList.get(i).setPrice(Integer.parseInt(priceText.getText()));
+                    productList.get(i).setPrice(price);
                     productList.get(i).setTypeDrink((String) typeText.getValue());
                     productList.set(i, productList.get(i));
                 }
@@ -178,6 +237,7 @@ public class AdminController implements Initializable, MyAdminControl {
             Optional<ButtonType> choice = alert.showAndWait();
             if (choice.get().getButtonData() == ButtonBar.ButtonData.YES) {
                 productList.remove(selected);
+                saveFile();
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

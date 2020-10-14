@@ -18,8 +18,11 @@ import sample.model.Product;
 
 import java.io.*;
 import java.net.URL;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class UserController implements Initializable {
@@ -33,7 +36,7 @@ public class UserController implements Initializable {
     private TableColumn<Product, String> proColumn;
 
     @FXML
-    private TableColumn<Product, Integer> priceColumn;
+    private TableColumn<Product, String> priceColumn;
 
     @FXML
     private TableColumn<Product, String> typeColumn;
@@ -42,7 +45,7 @@ public class UserController implements Initializable {
     private TextField searchText;
 
     @FXML
-    private TextField totalText;
+    private Label totalText;
 
     @FXML
     private Button addButton;
@@ -56,7 +59,7 @@ public class UserController implements Initializable {
     @FXML
     private TableColumn<BagUser,String> nameColumn;
     @FXML
-    private TableColumn<BagUser,Integer> priceUserColumn;
+    private TableColumn<BagUser,String> priceUserColumn;
 
     @FXML
     private TableColumn<BagUser,Integer> quantity;
@@ -75,13 +78,13 @@ public class UserController implements Initializable {
         );
         bagUsers = FXCollections.observableArrayList();
 
-        priceUserColumn.setCellValueFactory(new PropertyValueFactory<BagUser,Integer>("price"));
+        priceUserColumn.setCellValueFactory(new PropertyValueFactory<BagUser,String>("price"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<BagUser,String>("name"));
         quantity.setCellValueFactory(new PropertyValueFactory<BagUser,Integer>("quantity"));
 
         idColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
         proColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("price"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("price"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("typeDrink"));
         tableView.setItems(productList);
         bagView.setItems(bagUsers);
@@ -128,11 +131,16 @@ public class UserController implements Initializable {
             else {
                 bagUsers.add(bagUser);
             }
-            total += selectedProduct.getPrice();
-            totalText.setText(String.valueOf(total));
+            NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+            NumberFormat nf2 = NumberFormat.getInstance(new Locale("en", "US"));
+            Number price = nf.parse(selectedProduct.getPrice());
+
+            total +=(long) price;
+            String result = nf2.format(total);
+            totalText.setText(String.valueOf(result));
             tempProducts.add(selectedProduct.getName());
 
-        } catch (NullPointerException e){
+        } catch (NullPointerException | ParseException e){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText("plz choose a product");
             alert.show();
@@ -149,9 +157,11 @@ public class UserController implements Initializable {
         if (total >= 0) {
             try {
                 if (checkTempProduct(selected.getName())) {
-                    total -= selected.getPrice();
-                    for (int i = 0; i < bagUsers.size(); i++) {
-                        if (bagUsers.get(i).getName().equals(selected.getName())){
+                    NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+                    Number price = nf.parse(selected.getPrice());
+                    total -=(long) price;
+                    for (int i = 0; i < bagUsers.size()  ; i++) {
+                        if (bagUsers.get(i).getName().equals(selected.getName()) && bagUsers.get(i).getQuantity() > 0){
                             bagUsers.get(i).setQuantity(bagUsers.get(i).getQuantity()-1);
                             bagUsers.set(i, bagUsers.get(i));
                         }
@@ -164,12 +174,17 @@ public class UserController implements Initializable {
             } catch (NullPointerException e) {
                 alert.setContentText("plz choose a product");
                 alert.show();
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
 
 
         } else {
-            totalText.setText(String.valueOf(0));
+
+            total = 0;
+            totalText.setText(String.valueOf(total));
             subButton.setDisable(true);
+            tempProducts.remove(selected);
         }
     }
     public boolean checkTempProduct(String name){
@@ -186,8 +201,9 @@ public class UserController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText("total: " + totalText.getText() + "VND");
         alert.show();
-        totalText.clear();
         tempProducts.remove(tempProducts);
+        bagView.refresh();
+        totalText.setText("0");
     }
 
 

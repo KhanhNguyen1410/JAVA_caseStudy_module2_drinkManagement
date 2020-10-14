@@ -7,9 +7,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="613.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.UserController">
+<AnchorPane prefHeight="400.0" prefWidth="613.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.UserController">
    <children>
-      <TableView fx:id="tableView" layoutX="279.0" prefHeight="400.0" prefWidth="335.0">
+      <TableView fx:id="tableView" layoutX="279.0" prefHeight="400.0" prefWidth="335.0" style="-fx-background-color: blue;">
         <columns>
           <TableColumn fx:id="idColumn" prefWidth="49.0" text="ID" />
           <TableColumn fx:id="proColumn" prefWidth="107.0" text="Product" />
@@ -18,14 +18,13 @@
         </columns>
       </TableView>
       <Button layoutX="1.0" layoutY="315.0" mnemonicParsing="false" onAction="#buy" prefHeight="25.0" prefWidth="52.0" text="buy" />
-      <TextField fx:id="searchText" layoutX="94.0" layoutY="26.0" promptText="enter name a product" />
-      <Label layoutX="28.0" layoutY="282.0" text="total" />
-      <TextField fx:id="totalText" layoutX="64.0" layoutY="278.0" />
-      <Button fx:id="addButton" layoutX="113.0" layoutY="72.0" mnemonicParsing="false" onAction="#add" prefHeight="0.0" prefWidth="52.0" text="add" />
-      <Button fx:id="subButton" layoutX="209.0" layoutY="72.0" mnemonicParsing="false" onAction="#sub" prefHeight="25.0" prefWidth="52.0" text="sub" />
+      <TextField fx:id="searchText" layoutX="65.0" layoutY="26.0" promptText="enter name a product" />
+      <Label layoutX="28.0" layoutY="282.0" text="total :" />
+      <Button fx:id="addButton" layoutX="65.0" layoutY="72.0" mnemonicParsing="false" onAction="#add" prefHeight="0.0" prefWidth="52.0" text="add" />
+      <Button fx:id="subButton" layoutX="166.0" layoutY="72.0" mnemonicParsing="false" onAction="#sub" prefHeight="25.0" prefWidth="52.0" text="sub" />
       <Button layoutX="209.0" layoutY="361.0" mnemonicParsing="false" onAction="#logOut" prefHeight="25.0" prefWidth="69.0" text="logOut" />
-      <Label layoutX="52.0" layoutY="30.0" text="Search" />
-      <TableView fx:id="bagView" layoutY="142.0" prefHeight="130.0" prefWidth="277.0">
+      <Label layoutX="22.0" layoutY="30.0" text="Search" />
+      <TableView fx:id="bagView" layoutY="142.0" prefHeight="130.0" prefWidth="277.0" style="-fx-background-color: pink;">
         <columns>
           <TableColumn fx:id="nameColumn" prefWidth="94.0" text="NameProduct" />
           <TableColumn fx:id="priceUserColumn" prefWidth="93.0" text="Price" />
@@ -33,5 +32,7 @@
         </columns>
       </TableView>
       <Label layoutX="15.0" layoutY="125.0" prefHeight="17.0" prefWidth="25.0" text="Bag" />
+      <Label fx:id="totalText" layoutX="70.0" layoutY="282.0" text="0" />
+      <Label layoutX="155.0" layoutY="282.0" text="Vnd" />
    </children>
 </AnchorPane>
